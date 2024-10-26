@@ -1,0 +1,45 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.ghala_new_app"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        // استخدام Java 17 للتوافق مع Gradle والمكتبات الحديثة
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        // تحديث jvmTarget إلى Java 17
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        // تحديد معرف التطبيق الفريد
+        applicationId = "com.example.ghala_new_app"
+        // تحديث القيم لتتوافق مع احتياجات تطبيقك
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            // استخدم توقيع التصحيح للتطوير
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+// تحديد مصدر Flutter
+flutter {
+    source = "../.."
+}
