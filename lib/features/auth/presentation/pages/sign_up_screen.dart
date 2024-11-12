@@ -14,6 +14,9 @@ import 'package:provider/provider.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/screen_util_new.dart';
+import '../../data/models/error_response_model_register.dart';
+import '../../data/models/register_response_model.dart';
+import '../../domain/use_cases/register_by_email_api.dart';
 import '../manager/providers/terms_and_condition_controller.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/gradient_text.dart';
@@ -31,10 +34,59 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController userNameTextEditingController;
   late TextEditingController emailTextEditingController;
   late TextEditingController passwordTextEditingController;
   bool valueCheckBox = false;
+  bool _isLoading = false;
+
+  final RegisterService _registerService = RegisterService();
+  void _register() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final result = await _registerService.registerUser(
+        context,
+        name: userNameTextEditingController.text,
+        email: emailTextEditingController.text,
+        password: passwordTextEditingController.text,
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (result is RegisterResponseModel) {
+        context.showSnackBar(message: result.message,erorr: false);
+        userNameTextEditingController.clear();
+        emailTextEditingController.clear();
+        passwordTextEditingController.clear();
+       // نجاح التسجيل
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text(result.message)),
+        // );
+      } else if (result is ErrorResponseModel) {
+        // عرض الأخطاء
+        context.showSnackBar(message: result.message,erorr: true);
+        // showDialog(
+        //   context: context,
+        //   builder: (context) => AlertDialog(
+        //     title: const Text('Error'),
+        //     content: Text(result.message),
+        //     actions: [
+        //       TextButton(
+        //         onPressed: () => Navigator.of(context).pop(),
+        //         child: const Text('OK'),
+        //       ),
+        //     ],
+        //   ),
+        // );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -54,8 +106,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    Locale currentLocale = Localizations.localeOf(context);
+
+    // طباعة اللغة الحالية
+    print("Current language: ${currentLocale.languageCode}");
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -63,7 +120,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         automaticallyImplyLeading: false,
         leading:  IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            print(currentLocale.languageCode);
+            // Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_outlined,
@@ -87,200 +145,238 @@ class _SignUpScreenState extends State<SignUpScreen> {
         SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: ScreenUtilNew.height(124)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
-                  child: GradientText(
-                      text: context.localizations.signUPScreenText2,
-                      gradient: const LinearGradient(colors: [
-                        AppColors.colorPurpleInLogin,
-                        Colors.black,
-                      ]),
-                      style: GoogleFonts.cairo(
-                        fontSize: 24.sp,
-                        color: AppColors.colorPurpleInLogin,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.height(32),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
-                  child: Text(
-                    context.localizations.signUPScreenText3,
-                    style: GoogleFonts.cairo(
-                      color: AppColors.colorResidential,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,
-                    ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
+                    child: GradientText(
+                        text: context.localizations.signUPScreenText2,
+                        gradient: const LinearGradient(colors: [
+                          AppColors.colorPurpleInLogin,
+                          Colors.black,
+                        ]),
+                        style: GoogleFonts.cairo(
+                          fontSize: 24.sp,
+                          color: AppColors.colorPurpleInLogin,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.center),
                   ),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.height(8),
-                ),
-                Padding(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
-                  child: TextFieldAuth(
-                    hintText: AppStrings.signUpScreen4,
-                    suffixIcon: Icons.person,
-                    textEditingController: userNameTextEditingController,
-                    obscureText: false,
-                    prefixIcon: false,
-                    suffixIconColor: AppColors.colorPurpleInLogin,
-                    onChanged: (String) {},
+                  SizedBox(
+                    height: ScreenUtilNew.height(32),
                   ),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.height(16),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
-                  child: Text(
-                    context.localizations.signUPScreenText4,
-                    style: GoogleFonts.cairo(
-                      color: AppColors.colorResidential,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.height(8),
-                ),
-                Padding(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
-                  child: TextFieldAuth(
-                    hintText: AppStrings.signUpScreen6,
-                    suffixIcon: Icons.email_outlined,
-                    textEditingController: emailTextEditingController,
-                    obscureText: false,
-                    prefixIcon: false,
-                    suffixIconColor: AppColors.colorPurpleInLogin,
-                    onChanged: (String) {},
-                  ),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.height(16),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ScreenUtilNew.height(16)),
-                  child: Text(
-                    context.localizations.signUPScreenText5,
-                    style: GoogleFonts.cairo(
-                      color: AppColors.colorResidential,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.width(8),
-                ),
-                Padding(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
-                  child: TextFieldAuth(
-                    hintText: AppStrings.signUpScreen8,
-                    suffixIcon: Icons.email_outlined,
-                    textEditingController: passwordTextEditingController,
-                    obscureText: true,
-                    prefixIcon: true,
-                    suffixIconColor: AppColors.colorPurpleInLogin,
-                    onChanged: (String) {},
-                  ),
-                ),
-                SizedBox(height: ScreenUtilNew.height(8),),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(PageAnimationTransition(
-                        page: const TermsAndCondition(),
-                        pageAnimationType: BottomToTopTransition()));
-                  },
-                  child: Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
-                    child: Row(
-                      children: [
-                        Selector<TermsAndConditionController, bool>(
-                          selector: (context, controller) => controller.isAccepted,
-                          builder: (context, isAccepted, child) {
-                            return Container(
-                              height: ScreenUtilNew.height(16),
-                              width: ScreenUtilNew.width(16),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isAccepted?AppColors.colorPurpleInLogin:AppColors.colorResidential
-                              ),
-                              child: isAccepted? const Icon(Icons.done,color: Colors.white,size: 8,):null,
-                            );
-                          },
-                        ),
-                        SizedBox(width: ScreenUtilNew.width(8),),
-                        Text(
-                          context.localizations.signUpScreenText6,
-                          style: GoogleFonts.cairo(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.colorPurpleInLogin),
-                        ),
-                      ],
+                    child: Text(
+                      context.localizations.signUPScreenText3,
+                      style: GoogleFonts.cairo(
+                        color: AppColors.colorResidential,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.sp,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: ScreenUtilNew.height(8),),
-                CustomButton(
-                  onPressed: () {
-                    _checkData();
-                  },
-                  text: context.localizations.signUPScreenText7,
-                  backgroundColor: AppColors.colorPurpleInLogin,
-                  padding: ScreenUtilNew.width(16),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.height(24),
-                ),
-                Center(
-                  child: Text(
-                    context.localizations.signUPScreenText8,
-                    style: GoogleFonts.cairo(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0XFF4B4B4B),
+                  SizedBox(
+                    height: ScreenUtilNew.height(8),
+                  ),
+                  Padding(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
+                    child: TextFieldAuth(
+                      hintText: AppStrings.signUpScreen4,
+                      suffixIcon: Icons.person,
+                      textEditingController: userNameTextEditingController,
+                      obscureText: false,
+                      prefixIcon: false,
+                      suffixIconColor: AppColors.colorPurpleInLogin,
+                      onChanged: (String) {}, nameValidator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: ScreenUtilNew.height(24),
-                ),
-                PackageLoginMethods(
-                    onTapFacebook: () {},
-                    onTapPhone: () {
+                  SizedBox(
+                    height: ScreenUtilNew.height(16),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
+                    child: Text(
+                      context.localizations.signUPScreenText4,
+                      style: GoogleFonts.cairo(
+                        color: AppColors.colorResidential,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: ScreenUtilNew.height(8),
+                  ),
+                  Padding(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
+                    child: TextFieldAuth(
+                      hintText: AppStrings.signUpScreen6,
+                      suffixIcon: Icons.email_outlined,
+                      textEditingController: emailTextEditingController,
+                      obscureText: false,
+                      prefixIcon: false,
+                      suffixIconColor: AppColors.colorPurpleInLogin,
+                      onChanged: (String) {}, nameValidator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                    ),
+                  ),
+                  SizedBox(
+                    height: ScreenUtilNew.height(16),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: ScreenUtilNew.height(16)),
+                    child: Text(
+                      context.localizations.signUPScreenText5,
+                      style: GoogleFonts.cairo(
+                        color: AppColors.colorResidential,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: ScreenUtilNew.width(8),
+                  ),
+
+                  Padding(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
+                    child: TextFieldAuth(
+                      hintText: AppStrings.signUpScreen8,
+                      suffixIcon: Icons.email_outlined,
+                      textEditingController: passwordTextEditingController,
+                      obscureText: true,
+                      prefixIcon: true,
+                      suffixIconColor: AppColors.colorPurpleInLogin,
+                      onChanged: (String) {},nameValidator: (value) {
+                      if (value == null || value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+
+                    ),
+                  ),
+                  SizedBox(height: ScreenUtilNew.height(8),),
+                  GestureDetector(
+                    onTap: (){
                       Navigator.of(context).push(PageAnimationTransition(
-                          page: const AuthWithPhoneNumber(),
-                          pageAnimationType: LeftToRightTransition()));
+                          page: const TermsAndCondition(),
+                          pageAnimationType: BottomToTopTransition()));
                     },
-                    onTapGmail: () {},
-                    onTapApple: () {}),
-                SizedBox(
-                  height: ScreenUtilNew.height(24),
-                ),
-                InestedOfAccounts(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(16)),
+                      child: Row(
+                        children: [
+                          Selector<TermsAndConditionController, bool>(
+                            selector: (context, controller) => controller.isAccepted,
+                            builder: (context, isAccepted, child) {
+                              return Container(
+                                height: ScreenUtilNew.height(16),
+                                width: ScreenUtilNew.width(16),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isAccepted?AppColors.colorPurpleInLogin:AppColors.colorResidential
+                                ),
+                                child: isAccepted? const Icon(Icons.done,color: Colors.white,size: 8,):null,
+                              );
+                            },
+                          ),
+                          SizedBox(width: ScreenUtilNew.width(8),),
+                          Text(
+                            context.localizations.signUpScreenText6,
+                            style: GoogleFonts.cairo(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.colorPurpleInLogin),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: ScreenUtilNew.height(8),),
+                  // _isLoading
+                  //     ? const CircularProgressIndicator()
+                  //     : ElevatedButton(
+                  //   onPressed: _register,
+                  //   child: const Text('Register'),
+                  // ),
+                  _isLoading
+                      ?  Center(
+                        child: const CircularProgressIndicator(
+                                            color: AppColors.colorPurpleInLogin,
+                                            backgroundColor: AppColors.colorPurpleSecondary,
+                                          ),
+                      ):CustomButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, "/login_screen");
+                      final termsAndConditionController = Provider.of<TermsAndConditionController>(context, listen: false);
+
+                      if (termsAndConditionController.isAccepted) {
+                        _register();
+                      } else {
+                        context.showSnackBar(message:currentLocale.languageCode=="en"?"You must agree to the Terms and Conditions": "يجب الموافقة على الشروط والأحكام", erorr: true);
+                      }
                     },
-                    textButton: context.localizations.signUPScreenText10,
-                    textWithTextButton: context.localizations.signUPScreenText9),
-                SizedBox(
-                  height: ScreenUtilNew.height(24),
-                ),
-              ],
+                    text: context.localizations.signUPScreenText7,
+                    backgroundColor: AppColors.colorPurpleInLogin,
+                    padding: ScreenUtilNew.width(16),
+                  ),
+                  SizedBox(
+                    height: ScreenUtilNew.height(24),
+                  ),
+                  Center(
+                    child: Text(
+                      context.localizations.signUPScreenText8,
+                      style: GoogleFonts.cairo(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0XFF4B4B4B),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: ScreenUtilNew.height(24),
+                  ),
+                  PackageLoginMethods(
+                      onTapFacebook: () {},
+                      onTapPhone: () {
+                        Navigator.of(context).push(PageAnimationTransition(
+                            page: const AuthWithPhoneNumber(),
+                            pageAnimationType: LeftToRightTransition()));
+                      },
+                      onTapGmail: () {},
+                      onTapApple: () {}),
+                  SizedBox(
+                    height: ScreenUtilNew.height(24),
+                  ),
+                  InestedOfAccounts(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, "/login_screen");
+                      },
+                      textButton: context.localizations.signUPScreenText10,
+                      textWithTextButton: context.localizations.signUPScreenText9),
+                  SizedBox(
+                    height: ScreenUtilNew.height(24),
+                  ),
+                ],
+              ),
             ),
           ),
         )

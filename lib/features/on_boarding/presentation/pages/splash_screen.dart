@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ghala_new_app/features/on_boarding/presentation/pages/on_boarding_screen.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets_manger.dart';
 import '../../../../core/utils/screen_util_new.dart';
@@ -13,21 +13,41 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _isLoggedIn = false; // State variable to track login status.
+
+  bool _isConnected = false;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 6), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
-      );
-    });
+    _checkInternetConnectivity();
   }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     ScreenUtilNew.init(context); // Initialize ScreenUtil here
   }
+  Future<void> _checkInternetConnectivity() async {
+    try {
+      final response = await http.get(Uri.parse('https://chat.localproductsnetwork.com/'));
+      print("status code ${response.statusCode}");
+      if (response.statusCode == 200) {
+        setState(() {
+          _isConnected = true;
+          print("true ------- status 200 ---------");
+        });
+      } else {
+        setState(() {
+          _isConnected = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isConnected = false;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -85,7 +85,8 @@ class TermsAndCondition extends StatelessWidget {
                         return ElevatedButton(
                           onPressed: () {
                             controller.isAccepted=true;
-                            Navigator.pushReplacementNamed(context, "/sign_up_screen");
+                            Navigator.pop(context);
+                            // Navigator.pushReplacementNamed(context, "/sign_up_screen");
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(

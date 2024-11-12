@@ -12,7 +12,8 @@ class TextFieldAuth extends StatefulWidget {
   final bool prefixIcon;
   final Color suffixIconColor;
   void Function(String)? onChanged;
-   TextFieldAuth({super.key,required this.hintText,required this.textEditingController,required this.suffixIcon,required this.obscureText,required this.prefixIcon,required this.suffixIconColor,required this.onChanged});
+  FormFieldValidator<String> nameValidator;
+   TextFieldAuth({super.key,required this.hintText,required this.textEditingController,required this.suffixIcon,required this.obscureText,required this.prefixIcon,required this.suffixIconColor,required this.onChanged,required this.nameValidator});
 
   @override
   State<TextFieldAuth> createState() => _TextFieldAuthState();
@@ -28,10 +29,21 @@ class _TextFieldAuthState extends State<TextFieldAuth> {
   }
   @override
   Widget build(BuildContext context) {
+    // TextFormField(
+    //   controller: _nameController,
+    //   decoration: const InputDecoration(labelText: 'Name'),
+    //   validator: (value) {
+    //     if (value == null || value.isEmpty) {
+    //       return 'Please enter your name';
+    //     }
+    //     return null;
+    //   },
+    // ),
     return SizedBox(
       height: ScreenUtilNew.height(60),
       width: double.infinity,
-      child: TextField(
+      child: TextFormField(
+        validator: widget.nameValidator,
         onChanged: widget.onChanged,
         controller: widget.textEditingController,
         style: GoogleFonts.cairo(
@@ -42,7 +54,9 @@ class _TextFieldAuthState extends State<TextFieldAuth> {
         // textDirection: TextDirection.rtl,
         obscureText: prefixIcon,
         obscuringCharacter: "*",
+
         decoration: InputDecoration(
+
           suffixIcon:widget.prefixIcon? IconButton(onPressed: (){
             setState(() {
               prefixIcon=!prefixIcon;

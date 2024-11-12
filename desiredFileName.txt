@@ -1,6 +1,5 @@
 {
   "ar": [
-    "signUPScreenText7",
     "ghalaEventScreenText2",
     "postsScreenText1",
     "game_Screen_text1",

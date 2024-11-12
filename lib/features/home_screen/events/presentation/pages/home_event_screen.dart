@@ -11,6 +11,7 @@ import 'package:page_animation_transition/page_animation_transition.dart';
 
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_strings.dart';
+import '../../../../../state_management/test_home.dart';
 import '../widgets/best_agencies_big_container.dart';
 import '../widgets/best_agencies_small_container.dart';
 import '../widgets/chat_rooms_bottom_the_countries.dart';
@@ -121,9 +122,9 @@ class _HomeEventScreenState extends State<HomeEventScreen> {
                 children: [
                   GestureDetector(
                       onTap: () {
-                        // Navigator.of(context).push(PageAnimationTransition(
-                        //     page:   const ChatRoomScreen(),
-                        //     pageAnimationType: BottomToTopTransition()));
+                        Navigator.of(context).push(PageAnimationTransition(
+                            page:    HomeScreen1(),
+                            pageAnimationType: BottomToTopTransition()));
                       },
                       child: BestAgenciesBigContainer(
                         title: "تعالو تعالو",

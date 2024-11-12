@@ -126,7 +126,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       textEditingController: newPasswordTextEditingController,
                       obscureText: true,
                       prefixIcon: true,
-                      suffixIconColor: AppColors.colorPurpleInLogin,
+                      suffixIconColor: AppColors.colorPurpleInLogin, nameValidator: (String? value) {  },
                     ),
                   ),
                   SizedBox(
@@ -157,7 +157,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           confirmNewPasswordTextEditingController,
                       obscureText: true,
                       prefixIcon: true,
-                      suffixIconColor: AppColors.colorPurpleInLogin,
+                      suffixIconColor: AppColors.colorPurpleInLogin, nameValidator: (String? value) {  },
                     ),
                   ),
                   SizedBox(height: ScreenUtilNew.height(32)),

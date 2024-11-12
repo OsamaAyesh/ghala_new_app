@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         textEditingController: emailTextEditingController,
                         obscureText: false,
                         prefixIcon: false,
-                        suffixIconColor: AppColors.colorPurpleInLogin,
+                        suffixIconColor: AppColors.colorPurpleInLogin, nameValidator: (String? value) {  },
                       ),
                     ),
                     SizedBox(
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         textEditingController: passwordTextEditingController,
                         obscureText: true,
                         prefixIcon: true,
-                        suffixIconColor: AppColors.colorPurpleInLogin,
+                        suffixIconColor: AppColors.colorPurpleInLogin, nameValidator: (String? value) {  },
                       ),
                     ),
                     Padding(

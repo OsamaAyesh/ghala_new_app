@@ -127,7 +127,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       textEditingController: emailTextEditingController,
                       obscureText: false,
                       prefixIcon: false,
-                      suffixIconColor: AppColors.colorPurpleInLogin,
+                      suffixIconColor: AppColors.colorPurpleInLogin, nameValidator: (String? value) {  },
                     ),
                   ),
                   SizedBox(
