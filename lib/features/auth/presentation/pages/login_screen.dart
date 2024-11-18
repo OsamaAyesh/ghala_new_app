@@ -10,6 +10,7 @@ import 'package:page_animation_transition/page_animation_transition.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/screen_util_new.dart';
 import '../../../home_screen/home_screen.dart';
+import '../../domain/use_cases/auth_service.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/gradient_text.dart';
 import '../widgets/image_background.dart';
@@ -29,6 +30,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController emailTextEditingController;
   late TextEditingController passwordTextEditingController;
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -111,7 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.symmetric(
                           horizontal: ScreenUtilNew.width(16)),
                       child: TextFieldAuth(
-                        onChanged: (_) {},
+                        onChanged: (_) async{
+
+                        },
                         hintText: AppStrings.loginText3,
                         suffixIcon: Icons.email_outlined,
                         textEditingController: emailTextEditingController,
@@ -195,9 +199,42 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: ScreenUtilNew.height(16),
                     ),
                     PackageLoginMethods(
-                      onTapApple: () {},
-                      onTapFacebook: () {},
-                      onTapGmail: () {},
+                      onTapApple: () async{
+                        try {
+                          await _authService.signInWithApple();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('تم تسجيل الدخول باستخدام Apple')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('خطأ: $e')),
+                          );
+                        }
+                      },
+                      onTapFacebook: ()async {
+                        try {
+                          await _authService.signInWithFacebook();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('تم تسجيل الدخول باستخدام Facebook')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('خطأ: $e')),
+                          );
+                        }
+                      },
+                      onTapGmail: () async{
+                        try {
+                          await _authService.signInWithGoogle();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('تم تسجيل الدخول باستخدام Google')),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('خطأ: $e')),
+                          );
+                        }
+                      },
                       onTapPhone: () {
                         Navigator.of(context).push(PageAnimationTransition(
                             page: const AuthWithPhoneNumber(),

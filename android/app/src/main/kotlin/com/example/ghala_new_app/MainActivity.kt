@@ -1,4 +1,4 @@
-package com.example.ghala_new_app
+package com.mjas.ghala_new_app
 
 import io.flutter.embedding.android.FlutterActivity
 

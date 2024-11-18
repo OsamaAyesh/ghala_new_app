@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "167837327204",
+    "project_id": "chat-system-b4f62",
+    "storage_bucket": "chat-system-b4f62.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167837327204:android:e15d2ce2245df5bd2da471",
+        "android_client_info": {
+          "package_name": "com.mjas.ghala_new_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167837327204-ucbnsa0kv9r8subidec406t23uhq1tki.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA65h_2863qjisfbCJc6AENkzq09Bq5cn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167837327204-ucbnsa0kv9r8subidec406t23uhq1tki.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

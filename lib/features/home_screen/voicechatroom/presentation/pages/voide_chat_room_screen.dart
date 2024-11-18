@@ -1,136 +1,69 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:ghala_new_app/core/utils/app_colors.dart';
+import 'package:ghala_new_app/core/utils/assets_manger.dart';
+import 'package:ghala_new_app/core/utils/context_extension.dart';
+import 'package:ghala_new_app/core/utils/screen_util_new.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// استبدل بالـ App ID، التوكن، واسم القناة الخاصة بك
-const appId = "0aab847179754ba287b7cbb81b170bfa";
-const token = "your-token-here";  // تأكد من تحديث التوكن
-const channel = "ghalatest";
-
-class VoiceChatRoomScreen extends StatefulWidget {
-  @override
-  _VoiceChatRoomScreenState createState() => _VoiceChatRoomScreenState();
-}
-
-class _VoiceChatRoomScreenState extends State<VoiceChatRoomScreen> {
-  late RtcEngine _engine;
-  bool _localUserJoined = false;
-  int? _remoteUid;
-  String _statusMessage = "Joining channel...";  // رسالة حالة المستخدم
-
-  @override
-  void initState() {
-    super.initState();
-    initAgora();
-  }
-
-  // أولاً، طلب الأذونات الخاصة بالميكروفون
-  Future<void> initAgora() async {
-    await [Permission.microphone].request();
-
-    // إنشاء المحرك وتهيئته
-    _engine = await createAgoraRtcEngine();
-    await _engine.initialize(RtcEngineContext(appId: appId));
-
-    // تعيين معالج الأحداث
-    _engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          setState(() {
-            _localUserJoined = true;
-            _statusMessage = "You have joined the channel.";
-          });
-          debugPrint("Local user ${connection.localUid} joined the channel");
-        },
-        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          setState(() {
-            _remoteUid = remoteUid;
-          });
-          debugPrint("Remote user $remoteUid joined");
-        },
-        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
-          setState(() {
-            _remoteUid = null;
-          });
-          debugPrint("Remote user $remoteUid left the channel");
-        },
-        onLeaveChannel: (RtcConnection connection, RtcStats stats) {
-          setState(() {
-            _localUserJoined = false;
-            _remoteUid = null;
-            _statusMessage = "You have left the channel.";
-          });
-        },
-      ),
-    );
-
-    // الانضمام إلى القناة
-    try {
-      await _engine.joinChannel(
-        token: token,
-        channelId: channel,
-        options: ChannelMediaOptions(
-          autoSubscribeAudio: true,
-          publishMicrophoneTrack: true,
-          clientRoleType: ClientRoleType.clientRoleBroadcaster,
-        ),
-        uid: 0,
-      );
-    } catch (e) {
-      setState(() {
-        _statusMessage = "Failed to join channel: $e";
-      });
-      debugPrint("Failed to join channel: $e");
-    }
-  }
-
-  // مغادرة القناة وتحرير الموارد عند الخروج من التطبيق
-  Future<void> _dispose() async {
-    await _engine.leaveChannel();
-    await _engine.release();
-  }
-
-  @override
-  void dispose() {
-    _dispose();
-    super.dispose();
-  }
-
+class LiveAudioRoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Voice Chat Room'),
-        backgroundColor: Colors.blueAccent,
+        title: Text("غرفة الخطابة إم عثمان",style: GoogleFonts.cairo(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w500,
+          color: AppColors.colorPurpleInLogin
+        ),),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        // backgroundColor: Color(0XFF66A6BA),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(_statusMessage), // عرض الرسالة المناسبة لحالة الانضمام
-            if (_localUserJoined)
-              Text("You have joined the channel as a host.")
-            else
-              Text("Joining channel..."),
-            if (_remoteUid != null)
-              Text("Remote user $_remoteUid is in the channel."),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                // مغادرة القناة
-                await _dispose();
-                setState(() {
-                  _localUserJoined = false;
-                  _remoteUid = null;
-                  _statusMessage = "You left the channel.";
-                });
-              },
-              child: Text("Leave Channel"),
+      body: ZegoUIKitPrebuiltLiveAudioRoom(
+        appID: 858267989,
+        appSign: "29e7fa1d649abe519e91df5aff2d0f56451cf44f3a9fd1da6cce644551c902d7",
+        userID: 'okasovvkaoskaok12121',
+        userName: 'ALI2131',
+        roomID: '2',
+          config: ZegoUIKitPrebuiltLiveAudioRoomConfig.host(
+          )..userAvatarUrl = "https://i.imgur.com/BoN9kdC.png"..background=background()..inRoomMessage=ZegoLiveAudioRoomInRoomMessageConfig(
+            showName: false,
+            resendIcon: IconButton(onPressed: (){}, icon: Icon(Icons.update)),
+            bottomLeft: Offset(ScreenUtilNew.width(16),ScreenUtilNew.height(16)),
+            backgroundColor:AppColors.colorPurpleInLogin.withOpacity(0.25),
+
+            showAvatar: false,
+            height: ScreenUtilNew.height(400),
+            borderRadius: BorderRadius.circular(10),
+            messageTextStyle: GoogleFonts.cairo(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: Colors.white
             ),
-          ],
-        ),
+            paddings: EdgeInsets.symmetric(horizontal: ScreenUtilNew.width(24),vertical: ScreenUtilNew.height(4)),
+            nameTextStyle: GoogleFonts.cairo(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: Colors.white
+            ),
+          )..useSpeakerWhenJoining=true
       ),
+    );
+  }
+
+  Widget background() {
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: Colors.white
+            // gradient: AppColors.backgroundSplashScreen
+          ),
+        ),
+      ],
     );
   }
 }

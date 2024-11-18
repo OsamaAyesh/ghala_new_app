@@ -3,7 +3,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum PrefKeys {
   loggedIn,
   language,
-  pageIndexLanguage
+  pageIndexLanguage,
+  userName,
+  userId,
+  token,
+  roomName,
+  roomId
 }
 
 class SharedPrefController {

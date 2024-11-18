@@ -54,7 +54,6 @@ class _TextFieldAuthState extends State<TextFieldAuth> {
         // textDirection: TextDirection.rtl,
         obscureText: prefixIcon,
         obscuringCharacter: "*",
-
         decoration: InputDecoration(
 
           suffixIcon:widget.prefixIcon? IconButton(onPressed: (){

@@ -65,14 +65,14 @@ class TermsAndCondition extends StatelessWidget {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.r),
-                          ),
-                          minimumSize: Size(ScreenUtilNew.width(160),
-                              ScreenUtilNew.height(52)),
-                          backgroundColor: Colors.red,
-                        ),
+                        // style: ElevatedButton.styleFrom(
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(15.r),
+                        //   ),
+                        //   minimumSize: Size(ScreenUtilNew.width(160),
+                        //       ScreenUtilNew.height(52)),
+                        //   backgroundColor: Colors.red,
+                        // ),
                         child: Text(
                           context.localizations.termsAndConditionScreenText4,
                           style: GoogleFonts.cairo(
@@ -88,14 +88,14 @@ class TermsAndCondition extends StatelessWidget {
                             Navigator.pop(context);
                             // Navigator.pushReplacementNamed(context, "/sign_up_screen");
                           },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.r),
-                            ),
-                            minimumSize: Size(ScreenUtilNew.width(160),
-                                ScreenUtilNew.height(52)),
-                            backgroundColor: AppColors.colorPurpleInLogin,
-                          ),
+                          // style: ElevatedButton.styleFrom(
+                          //   shape: RoundedRectangleBorder(
+                          //     borderRadius: BorderRadius.circular(15.r),
+                          //   ),
+                          //   minimumSize: Size(ScreenUtilNew.width(160),
+                          //       ScreenUtilNew.height(52)),
+                          //   backgroundColor: AppColors.colorPurpleInLogin,
+                          // ),
                           child: Text(
                             context.localizations.termsAndConditionScreenText3,
                             style: GoogleFonts.cairo(

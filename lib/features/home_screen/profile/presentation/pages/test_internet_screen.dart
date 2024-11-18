@@ -168,9 +168,9 @@ class _TestInternetScreenState extends State<TestInternetScreen> {
                           if (!readyToTest || bestServersList.isEmpty) return;
                           await _testUploadSpeed();
                         },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.colorPurpleInLogin
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //   backgroundColor: AppColors.colorPurpleInLogin
+                  // ),
                   child: Text(
                     context.localizations.testSpeedInternetScreen4,
                     style: GoogleFonts.cairo(
@@ -211,9 +211,9 @@ class _TestInternetScreenState extends State<TestInternetScreen> {
                           if (!readyToTest || bestServersList.isEmpty) return;
                           await _testDownloadSpeed();
                         },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.colorPurpleInLogin
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //     backgroundColor: AppColors.colorPurpleInLogin
+                  // ),
                   child: Text(
                     context.localizations.testSpeedInternetScreen4,
                     style: GoogleFonts.cairo(
